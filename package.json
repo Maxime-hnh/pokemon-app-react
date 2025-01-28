@@ -1,0 +1,59 @@
+{
+  "name": "curriculum-vitae",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@mantine/carousel": "^7.16.1",
+    "@mantine/core": "^7.16.1",
+    "@mantine/dates": "^7.16.1",
+    "@mantine/form": "^7.16.2",
+    "@mantine/hooks": "^7.16.1",
+    "@mantine/modals": "^7.16.1",
+    "@mantine/notifications": "^7.16.1",
+    "@tabler/icons-react": "^3.29.0",
+    "@tcgdex/sdk": "^2.6.0",
+    "@types/react": "18.x",
+    "@types/react-dom": "18.x",
+    "cra-template-typescript": "1.2.0",
+    "dayjs": "^1.11.13",
+    "embla-carousel-react": "^7.1.0",
+    "firebase": "^11.2.0",
+    "gsap": "^3.12.7",
+    "mobx": "^6.13.5",
+    "mobx-react-lite": "^4.1.0",
+    "react": "18.x",
+    "react-dom": "18.x",
+    "react-router-dom": "^7.1.3",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@types/react-router-dom": "^5.3.3",
+    "sass": "^1.83.4"
+  }
+}
