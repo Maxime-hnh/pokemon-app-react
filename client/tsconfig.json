@@ -26,7 +26,8 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    // "src",
+    "vite-env.d.ts"
+, "src/index.jsx"    // "src",
     // "defs/module.d.ts"
   ]
 }

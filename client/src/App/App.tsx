@@ -11,7 +11,6 @@ import {
 import dayjs from 'dayjs';
 import '@mantine/core/styles.css';
 import '@mantine/carousel/styles.css';
-import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import "@mantine/notifications/styles.css";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -42,6 +41,7 @@ const App = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("ici")
     const isMobile = window.innerWidth < MOBILE_SIZE;
     setIsMobile(isMobile);
     const vh = window.innerHeight * 0.01;

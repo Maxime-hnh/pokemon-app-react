@@ -17,19 +17,19 @@ class AuthStore {
     });
 
 
-    onAuthStateChanged(auth, async (user) => {
-      await setPersistence(auth, browserLocalPersistence)
-      if (user) {
-        await user.getIdToken(true).then(async (newToken) => {
-          this.setIdToken(newToken)
-          this.isAuthenticated = true;
-        })
-      } else {
-        this.clearToken()
-        await signInAnonymously(auth);
-      }
-      this.checkAuthentication();
-    })
+    // onAuthStateChanged(auth, async (user) => {
+    //   await setPersistence(auth, browserLocalPersistence)
+    //   if (user) {
+    //     await user.getIdToken(true).then(async (newToken) => {
+    //       this.setIdToken(newToken)
+    //       this.isAuthenticated = true;
+    //     })
+    //   } else {
+    //     this.clearToken()
+    //     await signInAnonymously(auth);
+    //   }
+    //   this.checkAuthentication();
+    // })
 
   }
 
