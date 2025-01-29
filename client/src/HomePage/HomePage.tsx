@@ -39,10 +39,12 @@ const HomePage = () => {
                 </Group>
               </Accordion.Control>
               <Accordion.Panel>
-                <SimpleGrid mt={"sm"} cols={{ base: 1, xs: 2, sm: 3, md: 4, xl: 4 }}>
+                <SimpleGrid mt={"sm"} cols={{ base: 1, xs: 2, sm: 3, md: 4, xl: 4 }} spacing={"xs"}>
                   {serie.sets?.length > 0
                     && serie.sets.map(set =>
                       <Paper
+                        withBorder
+                        shadow="md"
                         h={125}
                         mah={125}
                         key={set.id}

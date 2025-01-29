@@ -60,13 +60,15 @@ const SetPage = () => {
   return (
     <div>
       <Stack w={"100%"}>
-        <Group align="center">
-          <Image
-            src={getImageUrl(set?.logo!, 'png')}
-            w={150}
-            maw={150}
-          />
-          <Title>{set?.name}</Title>
+        <Group align="center" justify="center">
+          {set?.logo
+            ? <Image
+              src={getImageUrl(set.logo, 'png')}
+              w={150}
+              maw={150}
+            />
+            : <Title>{set?.name}</Title>
+          }
         </Group>
         <Input
           leftSection={<IconSearch />}
@@ -76,7 +78,7 @@ const SetPage = () => {
           mb={"md"}
         />
       </Stack>
-      <SimpleGrid cols={{ base: 2, xs: 3, md: 4, lg: 5, xl: 6 }}>
+      <SimpleGrid cols={{ base: 2, xs: 3, md: 4, lg: 5, xl: 6 }} spacing={"xs"}>
         {filteredCards?.length > 0
           && filteredCards.map(card =>
             <Box

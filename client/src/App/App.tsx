@@ -61,7 +61,7 @@ const App = () => {
         <AppShell
           header={{ height: 60 }}
           navbar={{ width: 300, breakpoint: 'sm', collapsed: { desktop: true, mobile: !opened } }}
-          padding="md"
+          padding={{ base: "xs", md: "md" }}
         >
 
           <AppShell.Header>
@@ -76,14 +76,14 @@ const App = () => {
                 />
               </Group>
               <Group>
-                <Button onClick={() => navigate('/connexion')}>Connexion</Button>
+                {/* <Button onClick={() => navigate('/connexion')}>Connexion</Button> */}
                 <SwitchTheme />
               </Group>
             </Group>
           </AppShell.Header>
 
           <AppShell.Navbar py="md" px={4}>
-            <Button>ok</Button>
+            {/* <Button>ok</Button> */}
           </AppShell.Navbar>
 
           <AppShell.Main>
