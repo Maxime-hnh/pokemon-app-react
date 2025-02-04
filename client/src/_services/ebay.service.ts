@@ -1,3 +1,4 @@
+import { handleResponse } from "../_helpers/handleResponse";
 
 const BASE_URL = "https://us-central1-pokemon-app.cloudfunctions.net/searchEbayItems";
 
@@ -26,10 +27,15 @@ class EbayService {
 
 
   searchEbayItems = async (query: any) => {
+    const requestOptions: RequestInit = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    }
     try {
-      const response = await fetch(`${BASE_URL}?q=${encodeURIComponent(query)}`);
-      const data = await response.json();
-      return data;
+      const response = await handleResponse(await fetch(`${BASE_URL}?q=${encodeURIComponent(query)}`, requestOptions));
+      return response;
     } catch (error) {
       console.error("Erreur lors de l'appel à Firebase :", error);
       throw error;

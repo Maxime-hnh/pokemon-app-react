@@ -4,11 +4,13 @@ import { tcgdexService } from "../_services/tcgdex.service";
 import { Serie } from "../_interfaces/serie.interface";
 import styles from './HomePage.module.scss';
 import { useNavigate } from "react-router-dom";
+import { ebayService } from "../_services/ebay.service";
 
 const HomePage = () => {
 
   const [series, setSeries] = useState<Serie[]>([]);
   const { getSeriesWithSet } = tcgdexService;
+  // const { searchEbayItems } = ebayService;
 
   const loadSeries = async () => {
     const data = await getSeriesWithSet();
@@ -16,7 +18,13 @@ const HomePage = () => {
   }
   const navigate = useNavigate();
 
+  // const test = async () => {
+  //   const data = await searchEbayItems("display forces temporelles")
+  //   console.log(data)
+  // }
+
   useEffect(() => {
+    // test()
     loadSeries();
   }, [])
 

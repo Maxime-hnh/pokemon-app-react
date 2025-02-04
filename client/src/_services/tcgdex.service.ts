@@ -14,7 +14,7 @@ class TCGDexService {
 
 
   getSeries = async (): Promise<Serie[] | void> => {
-    return await handleResponse(await fetch('https://api.tcgdex.net/v2/fr/series?sort:field=releaseDate&sort:order=ASC'));
+    return await handleResponse(await fetch('https://api.tcgdex.net/v2/fr/series?sort:field=releaseDate&sort:order=DESC'));
   };
 
   getSets = async (): Promise<Set[] | void> => {

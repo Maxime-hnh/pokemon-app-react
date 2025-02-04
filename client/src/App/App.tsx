@@ -26,6 +26,7 @@ import SwitchTheme from '../_components/SwitchTheme';
 import SetPage from '../SetPage/SetPage';
 import SignupPage from '../SignupPage/SignupPage';
 import { ModalsProvider } from '@mantine/modals';
+import LoginPopover from '../_components/LoginPopover';
 
 const App = () => {
 
@@ -41,7 +42,6 @@ const App = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("ici")
     const isMobile = window.innerWidth < MOBILE_SIZE;
     setIsMobile(isMobile);
     const vh = window.innerHeight * 0.01;
@@ -50,7 +50,7 @@ const App = () => {
 
 
   return (
-    <MantineProvider theme={themeMantine} defaultColorScheme="dark">
+    <MantineProvider theme={themeMantine} defaultColorScheme="light">
       <Notifications autoClose={4000} zIndex={1000000} />
       <ModalsProvider />
 
@@ -78,6 +78,7 @@ const App = () => {
               <Group>
                 {/* <Button onClick={() => navigate('/connexion')}>Connexion</Button> */}
                 <SwitchTheme />
+                <LoginPopover />
               </Group>
             </Group>
           </AppShell.Header>

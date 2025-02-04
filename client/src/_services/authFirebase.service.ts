@@ -1,6 +1,7 @@
 import { UserSignupPros } from "../_interfaces/user.interface";
 import { createUserWithEmailAndPassword, GoogleAuthProvider, linkWithPopup, signInWithCredential, signInWithEmailAndPassword, signInWithPopup, User, UserCredential } from "firebase/auth";
 import { auth } from "../_config/firebaseConfig";
+import { notifications } from "@mantine/notifications";
 
 class AuthFirebaseService {
 
@@ -15,8 +16,12 @@ class AuthFirebaseService {
         values.password!
       );
       return userCredential
-    } catch (error) {
-      console.error(error)
+    } catch (error: any) {
+      if (error.code === 'auth/email-already-in-use') {
+        notifications.show({ message: `Un compte existe déjà avec l'adresse mail ${values.email}`, color: "red" })
+      } else {
+        console.error(error)
+      }
     }
   }
 

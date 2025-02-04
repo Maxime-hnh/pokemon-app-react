@@ -5,9 +5,10 @@ import { IconCheck, IconMail, IconSword, IconSwords, IconX } from "@tabler/icons
 import { useState } from "react"
 import { authFirebaseService } from "../_services/authFirebase.service"
 import { authStore } from "../_store/auth.store"
-import { fetchSignInMethodsForEmail } from "firebase/auth"
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, signInWithEmailAndPassword, UserCredential } from "firebase/auth"
 import { auth } from "../_config/firebaseConfig"
 import { observer } from "mobx-react-lite"
+import { notifications } from "@mantine/notifications"
 
 const SignupPage = observer(() => {
 
@@ -50,15 +51,27 @@ const SignupPage = observer(() => {
   })
 
   const handleSubmit = async (values: UserSignupPros) => {
-    const signInMethods = await fetchSignInMethodsForEmail(auth, values.email);
-    if (signInMethods.length > 0) {
-      const userCredential = await handleSignInWithEmailAndPassword(values)
-      setLoggedUser(userCredential)
-    } else {
-      const userCredential = await handleSignupWithEmailAndPassword(values)
-      setLoggedUser(userCredential)
+    try {
+      let userCredential: UserCredential | null = null;
+      try {
+        // Tentative de connexion
+        userCredential = await signInWithEmailAndPassword(auth, values.email, values.password!);
+      } catch (error: any) {
+        // Si l'utilisateur n'existe pas, procéder à l'inscription
+        if (error.code === 'auth/user-not-found') {
+          userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password!);
+          console.log("Inscription réussie");
+        } else {
+          throw error;
+        }
+      }
+      if (userCredential) {
+        setLoggedUser(userCredential.user);
+      }
+    } catch (error: any) {
+      notifications.show({ message: error, color: "red" })
     }
-  }
+  };
 
   const requirements = [
     { re: /[0-9]/, label: 'Votre mot de passe doit contenir au moins un nombre' },
