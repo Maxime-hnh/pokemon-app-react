@@ -1,11 +1,12 @@
 import { handleResponse } from "../_helpers/handleResponse";
 
-const BASE_URL = "https://us-central1-pokemon-app.cloudfunctions.net/searchEbayItems";
+const EBAY_SEARCHITEMS_URL = import.meta.env.VITE_EBAY_SEARCHITEMS_URL;
 
 class EbayService {
 
   constructor() {
   }
+
 
   searchOnEbay = (cardName: string, cardId: string, localId: string, cardCountOfficial?: number): void => {
     if (cardCountOfficial) {
@@ -34,7 +35,7 @@ class EbayService {
       }
     }
     try {
-      const response = await handleResponse(await fetch(`${BASE_URL}?q=${encodeURIComponent(query)}`, requestOptions));
+      const response = await handleResponse(await fetch(`${EBAY_SEARCHITEMS_URL}?q=${encodeURIComponent(query)}`, requestOptions));
       return response;
     } catch (error) {
       console.error("Erreur lors de l'appel à Firebase :", error);

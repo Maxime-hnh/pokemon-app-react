@@ -2,7 +2,7 @@ import TCGdex from '@tcgdex/sdk'
 import { Set } from '../_interfaces/set.interface';
 import { handleResponse } from '../_helpers/handleResponse';
 import { Serie } from '../_interfaces/serie.interface';
-import { Card } from '../_interfaces/card.interface';
+import { Card, CardBrief } from '../_interfaces/card.interface';
 
 
 class TCGDexService {
@@ -23,6 +23,12 @@ class TCGDexService {
 
   getSetById = async (setId: string): Promise<Set | void> => {
     return await handleResponse(await fetch(`https://api.tcgdex.net/v2/fr/sets/${setId}`))
+    // const cards = await Promise.all(
+    //   set.cards.map(async (card: CardBrief) => {
+    //     return await handleResponse(await fetch(`https://api.tcgdex.net/v2/fr/cards/${card.id}`));
+    //   })
+    // );
+    // return { ...set, cards };
   }
 
   getCardById = async (cardId: string): Promise<Card | void> => {

@@ -7,19 +7,21 @@ import {
   Image,
   Loader,
   MantineProvider,
+  MantineThemeOverride,
 } from '@mantine/core';
 import dayjs from 'dayjs';
 import '@mantine/core/styles.css';
 import '@mantine/carousel/styles.css';
 import '@mantine/dates/styles.css';
 import "@mantine/notifications/styles.css";
+import "../global.css";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import useWindowSize from '../_components/utils/useWindowSize';
 import { Suspense, useEffect, useState } from 'react';
 import { MOBILE_SIZE } from '../_helpers/constants';
 import AppContext from './AppContext';
 import { Notifications } from '@mantine/notifications';
-import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks';
 import HomePage from '../HomePage/HomePage';
 import SwitchTheme from '../_components/SwitchTheme';
@@ -31,8 +33,20 @@ import LoginPopover from '../_components/LoginPopover';
 const App = () => {
 
   dayjs.extend(customParseFormat);
-  const themeMantine = createTheme({
+
+  const themeMantine: MantineThemeOverride = createTheme({
     autoContrast: true,
+    components: {
+      // Paper: {
+      //   styles: (theme: any) => ({
+      //     root: {
+      //       backgroundColor: theme === 'dark'
+      //         ? "#101010"
+      //         : "red"
+      //     }
+      //   })
+      // }
+    }
 
   });
 
@@ -53,7 +67,6 @@ const App = () => {
     <MantineProvider theme={themeMantine} defaultColorScheme="light">
       <Notifications autoClose={4000} zIndex={1000000} />
       <ModalsProvider />
-
       <AppContext.Provider value={{
         isMobile,
       }}>

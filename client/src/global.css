@@ -1,0 +1,6 @@
+/* 🌙 Personnalisation du mode dark */
+:root[data-mantine-color-scheme='dark'] {
+  --mantine-color-dark-9: #0a0a0a;
+  --mantine-color-dark-8: #141414;
+  --mantine-color-dark-7: #000;
+}

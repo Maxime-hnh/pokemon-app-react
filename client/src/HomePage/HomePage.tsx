@@ -10,7 +10,6 @@ const HomePage = () => {
 
   const [series, setSeries] = useState<Serie[]>([]);
   const { getSeriesWithSet } = tcgdexService;
-  // const { searchEbayItems } = ebayService;
 
   const loadSeries = async () => {
     const data = await getSeriesWithSet();
@@ -18,13 +17,8 @@ const HomePage = () => {
   }
   const navigate = useNavigate();
 
-  // const test = async () => {
-  //   const data = await searchEbayItems("display forces temporelles")
-  //   console.log(data)
-  // }
 
   useEffect(() => {
-    // test()
     loadSeries();
   }, [])
 
