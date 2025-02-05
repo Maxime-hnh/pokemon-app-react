@@ -11,6 +11,7 @@ import { dbFirebaseServie } from "../_services/dbFirebase.service";
 import { authStore } from "../_store/auth.store";
 import AppContext from "../App/AppContext";
 import CardMobile from "./CardMobile";
+import { sanitizeKey } from "../_helpers/helpers";
 
 const SetPage = () => {
 
@@ -77,10 +78,10 @@ const SetPage = () => {
   const handleFavoriteToggle = async (cardId: string, checked: boolean) => {
     if (checked) {
       await addFavorite(loggedUser.uid, cardId);
-      setFavorites([...favorites, cardId]);
+      setFavorites([...favorites, sanitizeKey(cardId)]);
     } else {
       await deleteFavorite(loggedUser.uid, cardId);
-      setFavorites(favorites.filter(id => id !== cardId));
+      setFavorites(favorites.filter(id => id !== sanitizeKey(cardId)));
     }
   }
 
@@ -164,7 +165,7 @@ const SetPage = () => {
                         : <Checkbox
                           color="green"
                           size="md"
-                          checked={favorites.includes(card.id)}
+                          checked={favorites.includes(sanitizeKey(card.id))}
                           onChange={(event) => handleFavoriteToggle(card.id, event.currentTarget.checked)}
                           style={{ cursor: "pointer" }}
                         />

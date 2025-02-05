@@ -1,5 +1,6 @@
 import { ref, set, remove, get } from "firebase/database";
 import { auth, db } from "../_config/firebaseConfig";
+import { sanitizeKey } from "../_helpers/helpers";
 
 class DbFirebaseService {
 
@@ -7,13 +8,15 @@ class DbFirebaseService {
   }
 
   addFavorite = async (userUid: string, pokemonId: string): Promise<void> => {
-    const favRef = ref(db, `users/${userUid}/favorites/${pokemonId}`);
+    const safePokemonId = sanitizeKey(pokemonId);
+    const favRef = ref(db, `users/${userUid}/favorites/${safePokemonId}`);
     await set(favRef, true);
   };
 
 
   deleteFavorite = async (userUid: string, pokemonId: string): Promise<void> => {
-    const favRef = ref(db, `users/${userUid}/favorites/${pokemonId}`);
+    const safePokemonId = sanitizeKey(pokemonId);
+    const favRef = ref(db, `users/${userUid}/favorites/${safePokemonId}`);
     await remove(favRef);
   };
 

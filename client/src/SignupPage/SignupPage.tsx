@@ -58,7 +58,7 @@ const SignupPage = observer(() => {
         userCredential = await signInWithEmailAndPassword(auth, values.email, values.password!);
       } catch (error: any) {
         // Si l'utilisateur n'existe pas, procéder à l'inscription
-        if (error.code === 'auth/user-not-found') {
+        if (error.code === 'auth/invalid-credential') {
           userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password!);
           console.log("Inscription réussie");
         } else {
