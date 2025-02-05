@@ -44,11 +44,13 @@ const SetPage = () => {
     };
 
     //favs
-    setIsLoading(true);
-    const favData = await getFavorites(loggedUser.uid);
-    if (favData) {
-      setFavorites(favData)
-      setIsLoading(false);
+    if (loggedUser) {
+      setIsLoading(true);
+      const favData = await getFavorites(loggedUser.uid);
+      if (favData) {
+        setFavorites(favData)
+        setIsLoading(false);
+      }
     }
     return;
   };
@@ -112,6 +114,7 @@ const SetPage = () => {
           && filteredCards.map(card =>
             isMobile ?
               <CardMobile
+                key={card.id}
                 set={set!}
                 card={card}
                 favorites={favorites}
@@ -126,7 +129,6 @@ const SetPage = () => {
                 w={"100%"}
                 pt={"140%"}
                 style={{ overflow: "hidden" }}
-                onClick={() => addFavorite(loggedUser.uid, card.id)}
               >
                 {!loadedImages[card.id] && (
                   <Skeleton

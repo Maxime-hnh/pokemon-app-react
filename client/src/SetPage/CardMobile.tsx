@@ -5,6 +5,7 @@ import { IconSearch } from "@tabler/icons-react";
 import { tcgdexService } from "../_services/tcgdex.service";
 import { ebayService } from "../_services/ebay.service";
 import { Set } from "../_interfaces/set.interface";
+import { authStore } from "../_store/auth.store";
 
 interface CardMobileProps {
   set: Set;
@@ -19,6 +20,7 @@ interface CardMobileProps {
 const CardMobile = ({ set, card, favorites, handleFavoriteToggle, handleImageLoad, loadedImages, isLoading }: CardMobileProps) => {
 
   const { getImageUrl } = tcgdexService;
+  const { loggedUser } = authStore;
   const { colorScheme } = useMantineColorScheme();
   const { searchOnEbay } = ebayService;
 
@@ -63,9 +65,6 @@ const CardMobile = ({ set, card, favorites, handleFavoriteToggle, handleImageLoa
             <Image
               className={styles.card_img}
               src={getImageUrl(card.image, "png", "low")}
-              onClick={() =>
-                searchOnEbay(card.name, card.id, card.localId, set?.cardCount.official)
-              }
               onLoad={() => handleImageLoad(card.id)}
               fit={"cover"}
               w={"75%"}
@@ -74,6 +73,7 @@ const CardMobile = ({ set, card, favorites, handleFavoriteToggle, handleImageLoa
               {isLoading
                 ? <Skeleton w={24} h={24} />
                 : <Checkbox
+                  disabled={!loggedUser}
                   size="md"
                   color="green"
                   checked={favorites.includes(card.id)}
@@ -81,7 +81,16 @@ const CardMobile = ({ set, card, favorites, handleFavoriteToggle, handleImageLoa
                   style={{ cursor: "pointer" }}
                 />
               }
-              <ActionIcon w={24} maw={24} mah={24} h={24} color="yellow">
+              <ActionIcon
+                w={24}
+                maw={24}
+                mah={24}
+                h={24}
+                color="yellow"
+                onClick={() =>
+                  searchOnEbay(card.name, card.id, card.localId, set?.cardCount.official)
+                }
+              >
                 <IconSearch size={20} />
               </ActionIcon>
             </Stack>
