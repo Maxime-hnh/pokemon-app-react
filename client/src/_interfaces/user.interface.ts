@@ -1,17 +1,11 @@
 export declare type UserProps = {
-  id?: number;
+  uid?: number;
   email: string;
   password: string;
-};
-
-export declare type UserSignupPros = {
-  email: string;
-  password: string;
-  confirmPassword: string;
 };
 
 export type FetchedUser = {
-  id: number;
+  uid: number;
 } & UserProps;
 
 export class User implements UserProps {

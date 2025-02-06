@@ -23,8 +23,8 @@ const HomePage = () => {
   }, [])
 
   return (
-    <Container>
-      <Accordion variant="default">
+    <Container p={0}>
+      <Accordion variant="separated" radius={"xl"}>
         {series?.length > 0
           && series.map(serie =>
             <Accordion.Item
@@ -37,7 +37,7 @@ const HomePage = () => {
                     src={"/pokeball.png"}
                     w={40}
                   />
-                  <Title order={3}>{serie.name}</Title>
+                  <Title className={styles.title} order={3}>{serie.name}</Title>
                 </Group>
               </Accordion.Control>
               <Accordion.Panel>
@@ -53,7 +53,7 @@ const HomePage = () => {
                         className={styles.set_container}
                         bg={"white"}
                         p={"md"}
-                        radius={"md"}
+                        radius={"xl"}
                         display={"flex"}
                         style={{ cursor: 'pointer', justifyContent: 'center', alignItems: 'center' }}
                         onClick={() => navigate(`/set/${set.id}`)}

@@ -5,7 +5,6 @@ import { auth } from "../_config/firebaseConfig";
 class AuthStore {
 
   idToken: string | undefined | null = localStorage.getItem("idToken");
-  isAuthenticated: boolean = false;
   loggedUser: any = JSON.parse(localStorage.getItem('loggedUser') || 'null');
 
   constructor() {
@@ -17,19 +16,17 @@ class AuthStore {
     });
 
 
-    // onAuthStateChanged(auth, async (user) => {
-    //   await setPersistence(auth, browserLocalPersistence)
-    //   if (user) {
-    //     await user.getIdToken(true).then(async (newToken) => {
-    //       this.setIdToken(newToken)
-    //       this.isAuthenticated = true;
-    //     })
-    //   } else {
-    //     this.clearToken()
-    //     await signInAnonymously(auth);
-    //   }
-    //   this.checkAuthentication();
-    // })
+    onAuthStateChanged(auth, async (user) => {
+      await setPersistence(auth, browserLocalPersistence)
+      if (user) {
+        await user.getIdToken(true).then(async (newToken) => {
+          this.setIdToken(newToken)
+          this.setLoggedUser(user)
+        })
+      } else {
+        this.clearToken()
+      }
+    });
 
   }
 
@@ -45,19 +42,10 @@ class AuthStore {
 
   clearToken = () => {
     this.idToken = null;
-    this.isAuthenticated = false;
     localStorage.removeItem('idToken');
     localStorage.removeItem('loggedUser');
     auth.signOut();
   };
-
-  checkAuthentication = () => {
-    if (this.idToken && this.loggedUser) {
-      this.isAuthenticated = true;
-    } else {
-      this.isAuthenticated = false;
-    }
-  }
 }
 
 export const authStore = new AuthStore();

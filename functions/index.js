@@ -1,4 +1,5 @@
 import { onRequest } from 'firebase-functions/v2/https';
+import { functions } from 'firebase-functions';
 import EbayAuthToken from 'ebay-oauth-nodejs-client';
 
 
@@ -8,21 +9,12 @@ const CERT_ID = process.env.EBAY_CERT_ID;
 const ebayAuth = new EbayAuthToken({
   clientId: APP_ID,
   clientSecret: CERT_ID,
-  // redirectUri: "http://localhost:3000/",
 });
 
 
 export const searchEbayItems = onRequest({ cors: true },
   async (req, res) => {
     try {
-
-      // res.setHeader("Access-Control-Allow-Origin", "*");
-      // res.setHeader("Vary", "Origin");
-      // res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-      // res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-      // if (req.method === "OPTIONS") return res.status(200).send("Salut toi !");
-
       const token = await ebayAuth.getApplicationToken("PRODUCTION", ["https://api.ebay.com/oauth/api_scope"]);
       if (!token) throw new Error("Impossible d'obtenir un token OAuth valide.");
 
@@ -52,4 +44,13 @@ export const searchEbayItems = onRequest({ cors: true },
       console.error("Erreur :", error);
       res.status(500).send({ error: error.message });
     }
-  });
+  }
+);
+
+// export const dailyJobPrices = functions.pubsub.topic("nom-du-topic").onPublish((message) => {
+//   console.log("Job quotidien déclenché !");
+
+
+//   // Ajoute ici ton code métier
+//   return Promise.resolve();
+// });

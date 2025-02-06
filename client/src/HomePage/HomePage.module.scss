@@ -1,5 +1,5 @@
 .set_container {
-  
+
   .set_logo {
     transition: transform 300ms ease;
   }
@@ -9,4 +9,10 @@
       transform: scale(1.1) translateY(-5px);
     }
   }
+
+}
+
+.title {
+  font-family: Greycliff CF, var(--mantine-font-family), serif;
+  font-weight: 900;
 }

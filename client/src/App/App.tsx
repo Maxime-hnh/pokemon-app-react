@@ -89,7 +89,6 @@ const App = () => {
                 />
               </Group>
               <Group>
-                {/* <Button onClick={() => navigate('/connexion')}>Connexion</Button> */}
                 <SwitchTheme />
                 <LoginPopover />
               </Group>
@@ -105,7 +104,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/set/:setId" element={<SetPage />} />
-                <Route path="/connexion" element={<SignupPage />} />
+                <Route path="/login" element={<SignupPage />} />
               </Routes>
             </Suspense>
           </AppShell.Main>

@@ -12,6 +12,7 @@ import { authStore } from "../_store/auth.store";
 import AppContext from "../App/AppContext";
 import CardMobile from "./CardMobile";
 import { sanitizeKey } from "../_helpers/helpers";
+import { auth } from "../_config/firebaseConfig";
 
 const SetPage = () => {
 
@@ -19,14 +20,14 @@ const SetPage = () => {
   const { isMobile } = useContext(AppContext);
   const { getSetById, getImageUrl } = tcgdexService;
   const { searchOnEbay } = ebayService;
-  const { addFavorite, deleteFavorite, getFavorites } = dbFirebaseServie;
+  const { linkCardById, unLinkCardById, getMyCards } = dbFirebaseServie;
   const { loggedUser } = authStore;
 
   const [set, setSet] = useState<Set | null>(null);
   const [searchValue, setSearchValue] = useState<string>("");
   const [filteredCards, setFilteredCards] = useState<CardBrief[]>([]);
   const { colorScheme } = useMantineColorScheme();
-  const [favorites, setFavorites] = useState<string[]>([]);
+  const [myCards, setMyCards] = useState<string[]>([]);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
@@ -42,17 +43,18 @@ const SetPage = () => {
       }
       setSet(customData);
       setFilteredCards(customData.cards);
+
+      //favs
+      if (loggedUser) {
+        setIsLoading(true);
+        const favData = await getMyCards(setData.id);
+        if (favData) {
+          setMyCards(favData)
+          setIsLoading(false);
+        }
+      }
     };
 
-    //favs
-    if (loggedUser) {
-      setIsLoading(true);
-      const favData = await getFavorites(loggedUser.uid);
-      if (favData) {
-        setFavorites(favData)
-        setIsLoading(false);
-      }
-    }
     return;
   };
 
@@ -75,13 +77,13 @@ const SetPage = () => {
     }));
   };
 
-  const handleFavoriteToggle = async (cardId: string, checked: boolean) => {
-    if (checked) {
-      await addFavorite(loggedUser.uid, cardId);
-      setFavorites([...favorites, sanitizeKey(cardId)]);
+  const handleFavoriteToggle = async (setId: string, cardId: string) => {
+    if (!myCards.includes(sanitizeKey(cardId))) {
+      await linkCardById(setId, cardId);
+      setMyCards([...myCards, sanitizeKey(cardId)]);
     } else {
-      await deleteFavorite(loggedUser.uid, cardId);
-      setFavorites(favorites.filter(id => id !== sanitizeKey(cardId)));
+      await unLinkCardById(setId, cardId);
+      setMyCards(myCards.filter(id => id !== sanitizeKey(cardId)));
     }
   }
 
@@ -118,7 +120,7 @@ const SetPage = () => {
                 key={card.id}
                 set={set!}
                 card={card}
-                favorites={favorites}
+                myCards={myCards}
                 handleFavoriteToggle={handleFavoriteToggle}
                 handleImageLoad={handleImageLoad}
                 loadedImages={loadedImages}
@@ -165,8 +167,8 @@ const SetPage = () => {
                         : <Checkbox
                           color="green"
                           size="md"
-                          checked={favorites.includes(sanitizeKey(card.id))}
-                          onChange={(event) => handleFavoriteToggle(card.id, event.currentTarget.checked)}
+                          checked={myCards.includes(sanitizeKey(card.id))}
+                          onChange={(event) => handleFavoriteToggle(set!.id, card.id)}
                           style={{ cursor: "pointer" }}
                         />
                       }

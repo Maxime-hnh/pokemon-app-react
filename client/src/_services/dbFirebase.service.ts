@@ -7,23 +7,29 @@ class DbFirebaseService {
   constructor() {
   }
 
-  addFavorite = async (userUid: string, pokemonId: string): Promise<void> => {
-    const safePokemonId = sanitizeKey(pokemonId);
-    const favRef = ref(db, `users/${userUid}/favorites/${safePokemonId}`);
-    await set(favRef, true);
+  linkCardById = async (setId: string, cardId: string): Promise<void> => {
+    if (!auth.currentUser?.uid) return;
+    const safeSetId = sanitizeKey(setId);
+    const safeCardId = sanitizeKey(cardId);
+    const cardRef = ref(db, `users/${auth.currentUser?.uid}/sets/${safeSetId}/cards/${safeCardId}`);
+    await set(cardRef, true);
   };
 
 
-  deleteFavorite = async (userUid: string, pokemonId: string): Promise<void> => {
-    const safePokemonId = sanitizeKey(pokemonId);
-    const favRef = ref(db, `users/${userUid}/favorites/${safePokemonId}`);
-    await remove(favRef);
+  unLinkCardById = async (setId: string, cardId: string): Promise<void> => {
+    if (!auth.currentUser?.uid) return;
+    const safeSetId = sanitizeKey(setId);
+    const safeCardId = sanitizeKey(cardId);
+    const cardRef = ref(db, `users/${auth.currentUser?.uid}/sets/${safeSetId}/cards/${safeCardId}`);
+    await remove(cardRef);
   };
 
 
-  getFavorites = async (userUid: string): Promise<string[] | void> => {
-    const favRef = ref(db, `users/${userUid}/favorites`);
-    const snapshot = await get(favRef);
+  getMyCards = async (setId: string): Promise<string[] | void> => {
+    if (!auth.currentUser?.uid) return;
+    const safeSetId = sanitizeKey(setId);
+    const listRef = ref(db, `users/${auth.currentUser.uid}/sets/${safeSetId}/cards`);
+    const snapshot = await get(listRef);
 
     if (snapshot.exists()) {
       return Object.keys(snapshot.val());

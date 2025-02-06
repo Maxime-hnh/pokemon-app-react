@@ -1,180 +1,76 @@
-import { Box, Button, Container, Group, Paper, PasswordInput, Popover, Progress, rem, Text, TextInput, Title } from "@mantine/core"
+import { Button, Container, Group, Paper, PasswordInput, Stack, Text, TextInput, Title } from "@mantine/core"
 import { useForm } from "@mantine/form"
-import { UserSignupPros } from "../_interfaces/user.interface"
-import { IconCheck, IconMail, IconSword, IconSwords, IconX } from "@tabler/icons-react"
-import { useState } from "react"
-import { authFirebaseService } from "../_services/authFirebase.service"
+import { UserProps } from "../_interfaces/user.interface"
+import { IconMail, IconPassword } from "@tabler/icons-react"
 import { authStore } from "../_store/auth.store"
-import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, signInWithEmailAndPassword, UserCredential } from "firebase/auth"
-import { auth } from "../_config/firebaseConfig"
 import { observer } from "mobx-react-lite"
+import styles from './SignupPage.module.scss';
+import { authFirebaseService } from "../_services/authFirebase.service"
+import { useLocation, useNavigate } from "react-router-dom"
 import { notifications } from "@mantine/notifications"
 
 const SignupPage = observer(() => {
 
+  const { handleSignupWithEmailAndPassword } = authFirebaseService;
+  const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location)
 
-  const [popoverOpened, setPopoverOpened] = useState<boolean>(false);
-  const [password, setPassword] = useState<string>('');
-  const { handleSignupWithEmailAndPassword, handleSignInWithEmailAndPassword } = authFirebaseService;
-  const { setLoggedUser } = authStore;
-
-  const form = useForm<UserSignupPros>({
+  const form = useForm<UserProps>({
     initialValues: {
       email: "",
       password: "",
-      confirmPassword: ""
     },
     validate: {
       email: (value: string) =>
         value.trim().length === 0 ? "Veuillez renseigner un email" : null,
-      password: (value: string) => {
-        if (!value) {
-          return "Veuillez renseigner un mot de passe";
-        }
-        if (
-          !/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(value)
-        ) {
-          return "Votre mot de passe doit contenir 8 caractères et au moins une majuscule, une minuscule et un nombre";
-        }
-        return null;
-      },
-      confirmPassword: (value: string, values: { password: string }) => {
-        if (!value) {
-          return "Confirmation requise";
-        }
-        if (value !== values.password) {
-          return "La confirmation n'est pas identique au mot de passe";
-        }
-        return null;
-      },
+      password: (value: string) =>
+        value.trim().length === 0 ? "Veuillez renseigner un mot de passe" : null,
     },
   })
 
-  const handleSubmit = async (values: UserSignupPros) => {
-    try {
-      let userCredential: UserCredential | null = null;
-      try {
-        // Tentative de connexion
-        userCredential = await signInWithEmailAndPassword(auth, values.email, values.password!);
-      } catch (error: any) {
-        // Si l'utilisateur n'existe pas, procéder à l'inscription
-        if (error.code === 'auth/invalid-credential') {
-          userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password!);
-          console.log("Inscription réussie");
-        } else {
-          throw error;
-        }
-      }
-      if (userCredential) {
-        setLoggedUser(userCredential.user);
-      }
-    } catch (error: any) {
-      notifications.show({ message: error, color: "red" })
-    }
+  const handleSubmit = async (values: UserProps) => {
+    await handleSignupWithEmailAndPassword(values)
+    navigate(location.state.from);
+    notifications.show({ message: "Connexion réussie !", color: "green" })
   };
-
-  const requirements = [
-    { re: /[0-9]/, label: 'Votre mot de passe doit contenir au moins un nombre' },
-    { re: /[a-z]/, label: 'Votre mot de passe doit contenir au moins une minuscule' },
-    { re: /[A-Z]/, label: 'Votre mot de passe doit contenir au moins une majuscule' },
-  ];
-
-  function getStrength(password: string) {
-    let multiplier = password.length > 7 ? 0 : 1;
-
-    requirements.forEach((requirement) => {
-      if (!requirement.re.test(password)) {
-        multiplier += 1;
-      }
-    });
-    return Math.max(100 - (100 / (requirements.length + 1)) * multiplier, 10);
-  }
-
-
-  function PasswordRequirement({ meets, label }: { meets: boolean; label: string }) {
-    return (
-      <Text
-        c={meets ? 'teal' : 'red'}
-        style={{ display: 'flex', alignItems: 'center' }}
-        mt={7}
-        size="sm"
-      >
-        {meets ? (
-          <IconCheck style={{ width: rem(14), height: rem(14) }} />
-        ) : (
-          <IconX style={{ width: rem(14), height: rem(14) }} />
-        )}{' '}
-        <Box ml={10}>{label}</Box>
-      </Text>
-
-    );
-  }
-
-  const checks = requirements.map((requirement, index) => (
-    <PasswordRequirement key={index} label={requirement.label} meets={requirement.re.test(password)} />
-  ));
-  const strength = getStrength(password);
-  const color = strength && strength === 100 ? 'teal' : strength && strength > 50 ? 'yellow' : 'red';
 
   return (
     <Container>
       <form
         onSubmit={form.onSubmit((values) => handleSubmit(values))}
+        className={styles.form}
       >
-        <Paper withBorder p={"md"}>
-          <Title ta="center" className={"titleFont"} mb={30}>Inscription</Title>
-          <TextInput
-            data-autofocus
-            label="Email"
-            name="email"
-            placeholder="jean.dupont@mail.fr"
-            key={form.key('email')}
-            {...form.getInputProps('email')}
-            withAsterisk
-            leftSection={<IconMail />}
-          />
-          <Popover opened={popoverOpened} position="bottom" width="target" transitionProps={{ transition: 'pop' }}>
-            <Popover.Target>
-              <div
-                onFocusCapture={() => setPopoverOpened(true)}
-                onBlurCapture={() => setPopoverOpened(false)}
-              >
-                <PasswordInput
-                  withAsterisk
-                  label="Nouveau mot de passe"
-                  name="password"
-                  value={form.values.password}
-                  error={form.errors.password}
-                  onChange={(e) => {
-                    form.setFieldValue("password", e.currentTarget.value)
-                    setPassword(e.currentTarget.value)
-                  }}
-                  leftSection={<IconSword />}
-                />
-              </div>
-            </Popover.Target>
-            <Popover.Dropdown>
-              <Progress color={color} value={strength} size={5} mb="xs" />
-              <PasswordRequirement label="Votre mot de passe doit contenir au moins 8 caractères"
-                meets={form.values.password.length > 7} />
-              {checks}
-            </Popover.Dropdown>
-          </Popover>
+        <Paper p={"md"} w={{ base: "100%", sm: "50%" }}>
+          <Stack gap={"xl"}>
+            <Title ta="start" className={styles.title}>Bienvenue</Title>
+            <Text ta={"justify"}>Veuillez renseigner votre adresse email et mot de passe pour vous identifier ou créer un compte.</Text>
+            <TextInput
+              data-autofocus
+              label="Email"
+              name="email"
+              placeholder="Adresse email"
+              key={form.key('email')}
+              {...form.getInputProps('email')}
+              size="md"
+              leftSection={<IconMail />}
+            />
 
-          <PasswordInput
-            label="Confirmer le mot de passe"
-            name="confirmPassword"
-            key={form.key('confirmPassword')}
-            {...form.getInputProps('confirmPassword')}
-            withAsterisk
-            leftSection={<IconSwords />}
-          />
-          <Group justify="center">
-            <Button mt={"xl"} type="submit">Inscription / Connexion</Button>
-          </Group>
+            <PasswordInput
+              label="Mot de passe"
+              name="password"
+              key={form.key('password')}
+              {...form.getInputProps('password')}
+              size="md"
+              leftSection={<IconPassword />}
+            />
+            <Group justify="center">
+              <Button style={{ flex: 1 }} size="md" bg={"dark"} radius={"xl"} type="submit">Inscription / Connexion</Button>
+            </Group>
+          </Stack>
         </Paper>
       </form>
-    </Container>
+    </Container >
   )
 })
 
