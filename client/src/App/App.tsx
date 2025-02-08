@@ -77,7 +77,7 @@ const App = () => {
           padding={{ base: "xs", md: "md" }}
         >
 
-          <AppShell.Header>
+          <AppShell.Header zIndex={9999}>
             <Group justify='space-between' h="100%" px="md">
               <Group>
                 <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
@@ -95,7 +95,7 @@ const App = () => {
             </Group>
           </AppShell.Header>
 
-          <AppShell.Navbar py="md" px={4}>
+          <AppShell.Navbar py="md" px={4} >
             {/* <Button>ok</Button> */}
           </AppShell.Navbar>
 

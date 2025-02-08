@@ -1,5 +1,5 @@
 import { CardBrief } from "../_interfaces/card.interface";
-import { ActionIcon, Box, Button, Checkbox, Group, Image, Paper, Skeleton, Stack, Text, useMantineColorScheme } from "@mantine/core";
+import { ActionIcon, Box, Button, Checkbox, Group, Image, Overlay, Paper, Skeleton, Stack, Text, useMantineColorScheme } from "@mantine/core";
 import styles from './SetPage.module.scss';
 import { IconPokeball, IconSearch } from "@tabler/icons-react";
 import { tcgdexService } from "../_services/tcgdex.service";
@@ -72,9 +72,11 @@ const CardMobile = ({ set, card, myCards, handleFavoriteToggle, handleImageLoad,
               fit={"cover"}
               w={"75%"}
             />
+
             {isLoading
               ? <Skeleton radius={"xl"} w={24} h={24} />
               : <Image
+                style={{ zIndex: 999 }}
                 w={24}
                 h={24}
                 src={myCards.includes(sanitizeKey(card.id))
@@ -90,11 +92,23 @@ const CardMobile = ({ set, card, myCards, handleFavoriteToggle, handleImageLoad,
 
             <Text
               fw={"bold"}
+              style={{ zIndex: 999 }}
             >
               50.00 €
             </Text>
           </Stack>
-          <Text fz={"xs"} pos={"absolute"} bottom={0} right={3}>{card.localId}/{set?.cardCount.official}</Text>
+          <Text
+            style={{ zIndex: 999 }}
+            fz={"xs"}
+            pos={"absolute"}
+            bottom={0}
+            right={3}
+          >
+            {card.localId}/{set?.cardCount.official}
+          </Text>
+          {myCards.includes(sanitizeKey(card.id)) &&
+            <Overlay color={colorScheme === "dark" ? "#000" : "#fff"} backgroundOpacity={0.35} blur={2} />
+          }
         </Stack>
       </Paper>
     </Box>

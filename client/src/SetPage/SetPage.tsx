@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, Group, Image, Input, Paper, SimpleGrid, Skeleton, Stack, Text, Title, useMantineColorScheme } from "@mantine/core";
+import { Box, Button, Checkbox, Group, Image, Input, Overlay, Paper, SimpleGrid, Skeleton, Stack, Text, Title, useMantineColorScheme } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Set } from "../_interfaces/set.interface";
@@ -161,15 +161,18 @@ const SetPage = () => {
                     p={"sm"}
                   >
                     <Group justify="space-between" w={"100%"}>
-                      <Text>{card.localId}/{set?.cardCount.official}</Text>
+                      <Text style={{ zIndex: 999 }}>{card.localId}/{set?.cardCount.official}</Text>
                       {isLoading
-                        ? <Skeleton w={24} h={24} />
-                        : <Checkbox
-                          color="green"
-                          size="md"
-                          checked={myCards.includes(sanitizeKey(card.id))}
-                          onChange={(event) => handleFavoriteToggle(set!.id, card.id)}
-                          style={{ cursor: "pointer" }}
+                        ? <Skeleton radius={"xl"} w={24} h={24} />
+                        : <Image
+                          style={{ zIndex: 999 }}
+                          w={24}
+                          h={24}
+                          src={myCards.includes(sanitizeKey(card.id))
+                            ? "/assets/pokeball-red.svg"
+                            : "/assets/pokeball-gray.svg"
+                          }
+                          onClick={() => handleFavoriteToggle(set!.id, card.id)}
                         />
                       }
                     </Group>
@@ -187,6 +190,7 @@ const SetPage = () => {
 
                       <Text
                         fw={"bold"}
+                        style={{ zIndex: 999 }}
                       >
                         50.00 €
                       </Text>
@@ -194,10 +198,14 @@ const SetPage = () => {
                         leftSection={<IconSearch />}
                         variant="outline"
                         color="yellow"
+                        style={{ zIndex: 999 }}
                       >
                         Ebay
                       </Button>
                     </Group>
+                    {myCards.includes(sanitizeKey(card.id)) &&
+                      <Overlay color={colorScheme === "dark" ? "#000" : "#fff"} backgroundOpacity={0.35} blur={2} />
+                    }
                   </Stack>
                 </Paper>
               </Box>
