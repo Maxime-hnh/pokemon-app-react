@@ -1,5 +1,5 @@
 import { onRequest } from 'firebase-functions/v2/https';
-import { functions } from 'firebase-functions';
+// import { functions } from 'firebase-functions';
 import EbayAuthToken from 'ebay-oauth-nodejs-client';
 
 
