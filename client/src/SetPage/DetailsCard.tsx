@@ -11,7 +11,7 @@ import { cardService } from "../_services/card.service";
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
 
-interface CardMobileProps {
+interface DetailsCardProps {
   set: Set;
   data: CardBrief;
   myCards: string[];
@@ -21,7 +21,7 @@ interface CardMobileProps {
   isLoading: boolean;
 }
 
-const CardMobile = ({ set, data, myCards, handleFavoriteToggle, handleImageLoad, loadedImages, isLoading }: CardMobileProps) => {
+const DetailsCard = ({ set, data, myCards, handleFavoriteToggle, handleImageLoad, loadedImages, isLoading }: DetailsCardProps) => {
 
   const [card, setCard] = useState<CardBrief>(data);
   const { getImageUrl } = tcgdexService;
@@ -115,16 +115,17 @@ const CardMobile = ({ set, data, myCards, handleFavoriteToggle, handleImageLoad,
             <Stack gap={0}>
 
               <Stack justify="center" gap={0}>
-                <Badge radius={0} size="sm" p={0} fw={"bold"} variant="transparent" color="blue" leftSection={<IconArrowRightBar color="#228be6" size={15} />}>
-                  {priceIsLoading
-                    ? <Loader color="blue" size="xs" type="dots" />
-                    : `${card.averagePrice} €`
-                  }
-                </Badge>
+                {card.averagePrice
+                  && <Badge radius={0} size="sm" p={0} fw={"bold"} variant="transparent" color="blue" leftSection={<IconArrowRightBar color="#228be6" size={15} />}>
+                    {priceIsLoading
+                      ? <Loader color="blue" size="xs" type="dots" />
+                      : `${card.averagePrice} €`
+                    }
+                  </Badge>
+                }
 
                 {card.averagePrice !== card.lowestPrice
-                  &&
-                  <Badge radius={0} size="sm" p={0} fw={"bold"} variant="transparent" color="green" leftSection={<IconTrendingDown color="green" size={15} />}>
+                  && <Badge radius={0} size="sm" p={0} fw={"bold"} variant="transparent" color="green" leftSection={<IconTrendingDown color="green" size={15} />}>
                     {priceIsLoading
                       ? <Loader color="green" size="xs" type="dots" />
                       : `${card.lowestPrice} €`
@@ -202,4 +203,4 @@ const CardMobile = ({ set, data, myCards, handleFavoriteToggle, handleImageLoad,
     </Box>
   )
 }
-export default CardMobile;
+export default DetailsCard;

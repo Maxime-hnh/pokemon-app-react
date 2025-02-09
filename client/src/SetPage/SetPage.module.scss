@@ -2,11 +2,22 @@
   transition: transform 500ms ease;
   cursor: pointer;
 }
+.onlyCard_img {
+  transition: transform 500ms ease;
+  cursor: pointer;
+}
+
 
 @media screen and (min-width: 769px) {
   .card_img {
     &:hover {
       transform: scale(1.05) translateY(-7px);
+
+    }
+  }
+  .onlyCard_img {
+    &:hover {
+      transform: scale(1.02) translateY(-5px);
 
     }
   }
