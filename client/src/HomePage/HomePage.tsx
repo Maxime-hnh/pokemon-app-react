@@ -10,7 +10,6 @@ const HomePage = () => {
 
   const [series, setSeries] = useState<Serie[]>([]);
   const { getSeriesWithSet, getSetById } = tcgdexService;
-  const { insertCards } = dbFirebaseServie;
 
   const loadSeries = async () => {
     const data = await getSeriesWithSet();
@@ -25,7 +24,6 @@ const HomePage = () => {
 
   return (
     <Container p={0}>
-      <Button onClick={() => insertCards("sv")}>ok</Button>
       <Accordion variant="separated" radius={"xl"}>
         {series?.length > 0
           && series.map(serie =>

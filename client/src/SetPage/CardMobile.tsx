@@ -1,7 +1,7 @@
 import { CardBrief } from "../_interfaces/card.interface";
-import { ActionIcon, Badge, Box, Button, Checkbox, Group, Image, Overlay, Paper, Skeleton, Stack, Text, Title, useMantineColorScheme } from "@mantine/core";
+import { ActionIcon, Avatar, Badge, Box, Button, Checkbox, Group, Image, Overlay, Paper, Skeleton, Stack, Text, Title, useMantineColorScheme } from "@mantine/core";
 import styles from './SetPage.module.scss';
-import { IconArrowRightBar, IconCheck, IconCircle, IconPokeball, IconRefresh, IconSearch, IconSquareRotated, IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
+import { IconArrowRightBar, IconCheck, IconCircle, IconExternalLink, IconPokeball, IconRefresh, IconSearch, IconShare3, IconSquareRotated, IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 import { tcgdexService } from "../_services/tcgdex.service";
 import { ebayService } from "../_services/ebay.service";
 import { Set } from "../_interfaces/set.interface";
@@ -61,7 +61,7 @@ const CardMobile = ({ set, card, myCards, handleFavoriteToggle, handleImageLoad,
           p={5}
           gap={0}
         >
-          <Group align="flex-start" justify="center" wrap="nowrap" gap={0}>
+          <Group align="flex-start" justify="center" wrap="nowrap" gap={0} pos={"relative"}>
 
 
             <Image
@@ -75,7 +75,6 @@ const CardMobile = ({ set, card, myCards, handleFavoriteToggle, handleImageLoad,
               w={"65%"}
               opacity={myCards.includes(sanitizeKey(card.id)) ? 0.2 : 1}
             />
-
           </Group>
 
           {/*Title and prices*/}
@@ -94,15 +93,8 @@ const CardMobile = ({ set, card, myCards, handleFavoriteToggle, handleImageLoad,
             </Stack>
 
             <Stack gap={0}>
-              <Image
-                src={"/assets/ebay-logo.svg"}
-                w={35}
-                alt="ebay"
-                onClick={() =>
-                  searchOnEbay(card.name, card.id, card.localId, set?.cardCount.official)
-                }
-              />
-              <Group wrap="nowrap" justify="center" gap={0}>
+
+              <Stack justify="center" gap={0}>
 
                 <Badge size="xs" p={0} fw={"bold"} variant="transparent" color="blue" leftSection={<IconArrowRightBar color="#228be6" size={15} />}>{card.averagePrice}€</Badge>
                 {card.averagePrice !== card.highestPrice
@@ -111,11 +103,11 @@ const CardMobile = ({ set, card, myCards, handleFavoriteToggle, handleImageLoad,
                 {card.averagePrice !== card.lowestPrice
                   && <Badge size="xs" p={0} fw={"bold"} variant="transparent" color="green" leftSection={<IconTrendingDown color="green" size={15} />}>{card.lowestPrice}€</Badge>
                 }
-              </Group>
+              </Stack>
             </Stack>
           </Stack>
 
-          <Group gap={2} justify="flex-end" w={"100%"}>
+          <Group pos={"absolute"} right={4}>
             {isLoading
               ? <Skeleton radius={"xl"} w={24} h={24} />
               : <Image
@@ -131,15 +123,22 @@ const CardMobile = ({ set, card, myCards, handleFavoriteToggle, handleImageLoad,
             }
           </Group>
 
-          <Group gap={3}>
+          <Group gap={3} wrap="nowrap" align="center" pos={"absolute"} bottom={1} left={5}>
             <IconRefresh color="#828282" size={10} />
-            <Text fz={8} c={"dimmed"}>{`Dernière mise à jour : ${dayjs(card.lastPriceUpdate).format('DD/MM/YYYY HH:mm')}`}</Text>
+            <Text fz={8} c={"dimmed"}>{`Dernière MAJ : ${dayjs(card.lastPriceUpdate).format('DD/MM/YYYY HH:mm')}`}</Text>
           </Group>
-          {/* <Stack>
-            <IconCircle />
-            <IconSquareRotated />
-            
-          </Stack> */}
+
+          <Group gap={0} pos={"absolute"} bottom={20} right={0} bg={"white"} style={{ borderRadius: "10px 0 0 10px" }} px={5} py={2}>
+            <Image
+              src={"/assets/ebay-logo.svg"}
+              w={35}
+              alt="ebay"
+              onClick={() =>
+                searchOnEbay(card.name, card.id, card.localId, set?.cardCount.official)
+              }
+            />
+            <IconExternalLink size={15} color="black" />
+          </Group>
         </Stack>
       </Paper>
     </Box>

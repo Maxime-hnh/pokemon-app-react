@@ -39,10 +39,11 @@ export enum Rarities {
 }
 
 interface Variants {
-  normal: boolean;
-  rever: boolean;
-  holo: boolean;
   firstEdition: boolean;
+  normal: boolean;
+  holo: boolean;
+  reverse: boolean;
+  wPromo: boolean;
 }
 
 
@@ -72,7 +73,7 @@ export interface CardBrief {
   ebaySearchContent?: string;
 
   rarity?: string;
-  variants?: string[];
+  variants?: Variants;
 
   createdat?: string;
   lastPriceUpdate?: string | null;

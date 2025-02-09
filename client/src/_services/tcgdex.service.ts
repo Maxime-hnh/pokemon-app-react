@@ -31,7 +31,11 @@ class TCGDexService {
     const set = await handleResponse(await fetch(`https://api.tcgdex.net/v2/fr/sets/${setId}`))
     if (set) {
       const cards = await cardService.getCardsBySetId(set.serie.id, sanitizeKey(set.id))
-      return { ...set, cards };
+      if (cards) {
+        return { ...set, cards };
+      } else {
+        return set
+      }
     }
   }
 
