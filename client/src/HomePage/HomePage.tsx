@@ -1,15 +1,16 @@
-import { Accordion, Container, Group, Image, Paper, SimpleGrid, Text, Title } from "@mantine/core";
+import { Accordion, Button, Container, Group, Image, Paper, SimpleGrid, Text, Title } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { tcgdexService } from "../_services/tcgdex.service";
 import { Serie } from "../_interfaces/serie.interface";
 import styles from './HomePage.module.scss';
 import { useNavigate } from "react-router-dom";
-import { ebayService } from "../_services/ebay.service";
+import { dbFirebaseServie } from "../_services/dbFirebase.service";
 
 const HomePage = () => {
 
   const [series, setSeries] = useState<Serie[]>([]);
-  const { getSeriesWithSet } = tcgdexService;
+  const { getSeriesWithSet, getSetById } = tcgdexService;
+  const { insertCards } = dbFirebaseServie;
 
   const loadSeries = async () => {
     const data = await getSeriesWithSet();
@@ -17,13 +18,14 @@ const HomePage = () => {
   }
   const navigate = useNavigate();
 
-
   useEffect(() => {
     loadSeries();
   }, [])
 
+
   return (
     <Container p={0}>
+      <Button onClick={() => insertCards("sv")}>ok</Button>
       <Accordion variant="separated" radius={"xl"}>
         {series?.length > 0
           && series.map(serie =>

@@ -56,7 +56,8 @@ export interface Card {
   rarity: string;
   variants: Variants;
   set: SetBrief;
-  cardCount?: CardCount
+  cardCount?: CardCount;
+
 };
 
 export interface CardBrief {
@@ -65,4 +66,15 @@ export interface CardBrief {
   name: string;
   image: string;
 
+  averagePrice?: number;
+  highestPrice?: number;
+  lowestPrice?: number;
+  ebaySearchContent?: string;
+
+  rarity?: string;
+  variants?: string[];
+
+  createdat?: string;
+  lastPriceUpdate?: string | null;
+  cardCount?: CardCount;
 }

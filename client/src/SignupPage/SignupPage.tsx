@@ -14,7 +14,6 @@ const SignupPage = observer(() => {
   const { handleSignupWithEmailAndPassword } = authFirebaseService;
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location)
 
   const form = useForm<UserProps>({
     initialValues: {

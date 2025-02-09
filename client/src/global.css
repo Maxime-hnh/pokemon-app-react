@@ -4,3 +4,8 @@
   --mantine-color-dark-8: #141414;
   --mantine-color-dark-7: #000;
 }
+
+.titleFont {
+  font-family: Greycliff CF, var(--mantine-font-family), serif;
+  font-weight: 900;
+}

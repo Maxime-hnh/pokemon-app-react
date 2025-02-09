@@ -12,7 +12,6 @@ import { authStore } from "../_store/auth.store";
 import AppContext from "../App/AppContext";
 import CardMobile from "./CardMobile";
 import { sanitizeKey } from "../_helpers/helpers";
-import { auth } from "../_config/firebaseConfig";
 
 const SetPage = () => {
 

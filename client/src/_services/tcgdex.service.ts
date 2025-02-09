@@ -3,6 +3,8 @@ import { Set } from '../_interfaces/set.interface';
 import { handleResponse } from '../_helpers/handleResponse';
 import { Serie } from '../_interfaces/serie.interface';
 import { Card, CardBrief } from '../_interfaces/card.interface';
+import { cardService } from './card.service';
+import { sanitizeKey } from '../_helpers/helpers';
 
 
 class TCGDexService {
@@ -17,18 +19,20 @@ class TCGDexService {
     return await handleResponse(await fetch('https://api.tcgdex.net/v2/fr/series?sort:field=releaseDate&sort:order=DESC'));
   };
 
+  getSerieById = async (serieId: string): Promise<Serie | void> => {
+    return await handleResponse(await fetch(`https://api.tcgdex.net/v2/fr/series/${serieId}`))
+  }
+
   getSets = async (): Promise<Set[] | void> => {
     return await handleResponse(await fetch('https://api.tcgdex.net/v2/fr/sets?sort:field=releaseDate&sort:order=DESC'));
   };
 
   getSetById = async (setId: string): Promise<Set | void> => {
-    return await handleResponse(await fetch(`https://api.tcgdex.net/v2/fr/sets/${setId}`))
-    // const cards = await Promise.all(
-    //   set.cards.map(async (card: CardBrief) => {
-    //     return await handleResponse(await fetch(`https://api.tcgdex.net/v2/fr/cards/${card.id}`));
-    //   })
-    // );
-    // return { ...set, cards };
+    const set = await handleResponse(await fetch(`https://api.tcgdex.net/v2/fr/sets/${setId}`))
+    if (set) {
+      const cards = await cardService.getCardsBySetId(set.serie.id, sanitizeKey(set.id))
+      return { ...set, cards };
+    }
   }
 
   getCardById = async (cardId: string): Promise<Card | void> => {
