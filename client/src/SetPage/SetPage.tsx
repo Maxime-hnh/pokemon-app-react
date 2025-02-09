@@ -118,7 +118,7 @@ const SetPage = () => {
               <CardMobile
                 key={card.id}
                 set={set!}
-                card={card}
+                data={card}
                 myCards={myCards}
                 handleFavoriteToggle={handleFavoriteToggle}
                 handleImageLoad={handleImageLoad}

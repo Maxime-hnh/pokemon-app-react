@@ -60,7 +60,6 @@ const searchCardOnEbay = async (query) => {
 
     const searchResponse = await fetch(
       `https://api.ebay.com/buy/browse/v1/item_summary/search?q=${encodeURIComponent(query)}&filter=categoryId:183454,buyingOptions:{FIXED_PRICE}`,
-      // `https://api.ebay.com/buy/browse/v1/item_summary/search?q=${encodeURIComponent(query)}`,
 
       {
         method: "GET",
@@ -85,10 +84,67 @@ const searchCardOnEbay = async (query) => {
   }
 }
 
+export const updateEbayPricesForCardId = onRequest({ cors: true },
+  async (req, res) => {
+    try {
+      const { serieId, setId, cardId } = req.query;
+      if (!setId || !cardId) {
+        return res.status(400).json({ error: "❌ Paramètres manquants : setId et cardId sont requis." });
+      }
+      const cardRef = db.ref(`cards/${serieId}/${setId}/${cardId}`)
+      const snapShot = await cardRef.once("value");
+      if (!snapShot.exists()) {
+        console.log("❌ Aucune carte trouvé !");
+        return;
+      }
+      const card = snapShot.val();
+
+      console.log(`🔎 Recherche eBay pour : ${card.ebaySearchContent}`);
+      const ebayData = await searchCardOnEbay(card.ebaySearchContent);
+
+      if (ebayData && ebayData.itemSummaries && ebayData.itemSummaries.length > 0) {
+        const priceArray = ebayData.itemSummaries
+          .map((item) => parseFloat(item.price.value))
+          .filter((price) => !isNaN(price));
+
+        if (priceArray.length > 0) {
+          const averagePrice = priceArray.reduce((sum, price) => sum + price, 0) / priceArray.length;
+          const lowestPrice = Math.min(...priceArray);
+          const highestPrice = Math.max(...priceArray);
+
+          const updatedCard = {
+            ...card,
+            averagePrice: parseFloat(averagePrice.toFixed(2)),
+            lowestPrice: parseFloat(lowestPrice.toFixed(2)),
+            highestPrice: parseFloat(highestPrice.toFixed(2)),
+            lastPriceUpdate: new Date().toISOString(),
+          };
+
+          await cardRef.set(updatedCard);
+          return res.status(200).json({ ...updatedCard, id: cardId })
+        }
+        return res.status(204).json({ message: `⏳ Aucun prix trouvé pour ${cardId} sur eBay.` });
+      }
+    } catch (error) {
+      console.error(error)
+      res.status(500).send({ error: error.message });
+    }
+  }
+)
+
 
 export const dailyJobPrices = onMessagePublished("cron-topic", async (event) => {
   console.log("✅ dailyJobPrices déclenché !");
-  const TWO_HOURS = 20 * 60 * 60 * 1000;
+  const TWO_HOURS = 2 * 60 * 60 * 1000;
+
+  const message = event.data?.message?.data
+    ? Buffer.from(event.data.message.data, "base64").toString()
+    : "";
+
+  if (message !== "dailyJobPrices") {
+    console.log("⏩ Ignoré : Ce message ne concerne pas dailyJobPrices.");
+    return;
+  }
   try {
     const setsSnapshot = await db.ref("cards/sv").once("value");
     if (!setsSnapshot.exists()) {
@@ -155,5 +211,6 @@ export const dailyJobPrices = onMessagePublished("cron-topic", async (event) => 
     console.error("❌ Erreur dans le job quotidien :", error);
   }
 });
+
 
 // https://api.ebay.com/buy/browse/v1/item_summary/search?q=Pikachu-ex%20179/131&filter=categoryId:183454,buyingOptions:{FIXED_PRICE}

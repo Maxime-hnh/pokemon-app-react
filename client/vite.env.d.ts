@@ -6,7 +6,8 @@ interface ImportMetaEnv {
   readonly VITE_FIREBASE_MESSAGINGSENDERID: string;
   readonly VITE_FIREBASE_APPID: string;
   readonly VITE_FIREBASE_MESUREMENTID: string;
-  readonly VITE_EBAY_SEARCHITEMS_URL: string
+  readonly VITE_EBAY_SEARCHITEMS_URL: string;
+  readonly VITE_FIREBASE_FUNCTION_UPDATE_EBAYPRICES_FOR_CARDID: string;
 }
 
 interface ImportMeta {
